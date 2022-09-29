@@ -1,30 +1,41 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import useStyles from './styles'
 import { TextField, Button, Typography, Paper } from '@mui/material'
 import FileBase from 'react-file-base64'
-import { createPost } from '../../actions/posts'
+import { createPost, updatePost } from '../../actions/posts'
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles()
   const [postData, setPostData] = useState({ creator: "", title: "", message: "", tags: "", selectedFile: "" })
+
+  const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (post) setPostData(post)
+  }, [post])
 
   const handleSubmit = (e) => {
     // console.log('submit clicked')
     e.preventDefault()
-
-    dispatch(createPost(postData))
+    if (currentId) {
+      dispatch(updatePost(currentId, postData))
+    } else {
+      dispatch(createPost(postData))
+    }
   }
 
   const clear = () => {
     console.log('clear clicked')
+    setCurrentId(null)
+    setPostData({ creator: "", title: "", message: "", tags: "", selectedFile: "" })
   }
 
   return (
     <Paper className={classes.paper}>
       <form autoComplete='off' noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-        <Typography variant='h6'>Creating a Memory</Typography>
+        <Typography variant='h6'>{currentId ? 'Editing' : 'Creating'} a Memory</Typography>
         <TextField name='creator' variant='outlined' label="Creator" fullWidth
           value={postData.creator} onChange={event => setPostData({ ...postData, creator: event.target.value })}
         />
@@ -45,7 +56,7 @@ const Form = () => {
           />
         </div>
         <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>
-          Submit
+          {currentId ? 'Update' : 'Create'}
         </Button>
         <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>
           Reset
