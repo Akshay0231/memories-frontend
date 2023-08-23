@@ -1,4 +1,5 @@
 import { makeStyles } from "@mui/styles";
+import { useTheme } from "@mui/material/styles";
 
 
 export default makeStyles(() => ({
@@ -16,4 +17,9 @@ export default makeStyles(() => ({
     image: {
         marginLeft: '15px',
     },
+    [useTheme().breakpoints.down('sm')]: {
+        mainContainer: {
+            flexDirection: 'column-reverse'
+        }
+    }
 }));

@@ -28,7 +28,7 @@ const Form = ({ currentId, setCurrentId }) => {
   }
 
   const clear = () => {
-    console.log('clear clicked')
+    console.log('clear clicked ')
     setCurrentId(null)
     setPostData({ creator: "", title: "", message: "", tags: "", selectedFile: "" })
   }
@@ -47,16 +47,21 @@ const Form = ({ currentId, setCurrentId }) => {
           value={postData.message} onChange={event => setPostData({ ...postData, message: event.target.value })}
         />
         <TextField name='tags' variant='outlined' label="Tags" fullWidth
-          value={postData.tags} onChange={event => setPostData({ ...postData, tags: event.target.value })}
+          value={postData.tags} onChange={event => setPostData({ ...postData, tags: event.target.value.split(',') })}
         />
         <div className={classes.fileInput}>
           <FileBase
+            key={postData.selectedFile || ''}
             type="file"
             multiple={false}
             onDone={({ base64 }) => setPostData({ ...postData, selectedFile: base64 })}
           />
         </div>
-        <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth>
+        <Button className={classes.buttonSubmit}
+          disabled={!(postData.creator && postData.title && postData.message && postData.tags && postData.selectedFile)}
+          variant="contained" color="primary" size="large" type="submit"
+          fullWidth
+        >
           {currentId ? 'Update' : 'Create'}
         </Button>
         <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth>

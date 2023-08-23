@@ -7,7 +7,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import useStyles from './styles'
 import moment from 'moment';
 import defaultImage from '../../../images/default.jpg'
-import { deletePost } from '../../../actions/posts';
+import { deletePost, likePost } from '../../../actions/posts';
 
 const Post = ({ post, setCurrentId }) => {
 
@@ -28,18 +28,17 @@ const Post = ({ post, setCurrentId }) => {
           <MoreHorizIcon fontSize='default' />
         </Button>
       </div>
-      <Typography className={classes.title} variant="h5" gutterBottom>{post.title}</Typography>
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary">{post.tags.map(tag => `#${tag} `)}</Typography>
       </div>
+      <Typography className={classes.title} variant="h5" gutterBottom>{post.title}</Typography>
       <CardContent>
-        <Typography variant="h5" gutterBottom>{post.message}</Typography>
+        <Typography variant="body2" color="textSecondary" component="p">{post.message}</Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button size='small' color="primary" onClick={() => { }}>
+        <Button size='small' color="primary" onClick={() => dispatch(likePost(post._id))}>
           <ThumbUpAltIcon />
-          Like
-          {post.likeCount}
+          &nbsp; Like &nbsp; {post.likeCount}
         </Button>
         <Button size='small' color="primary" onClick={() => dispatch(deletePost(post._id))}>
           <DeleteIcon fontSize='small' />
